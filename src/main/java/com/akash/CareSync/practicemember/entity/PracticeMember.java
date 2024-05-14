@@ -1,7 +1,10 @@
 package com.akash.CareSync.practicemember.entity;
 
 import com.akash.CareSync.base.BaseEntity;
+import com.akash.CareSync.contactdetails.entity.ContactDetails;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class PracticeMember extends BaseEntity {
@@ -11,8 +14,8 @@ public class PracticeMember extends BaseEntity {
     String gender;
     String blood_group;
     String degree;
-    Long postaladdress_id;
-    Long contactdetails_id;
+    @OneToOne(cascade = CascadeType.ALL)
+    ContactDetails contactDetails;
 
     public String getFirst_name() {
         return first_name;
@@ -54,19 +57,11 @@ public class PracticeMember extends BaseEntity {
         this.degree = degree;
     }
 
-    public Long getPostaladdress_id() {
-        return postaladdress_id;
+    public ContactDetails getContactDetails() {
+        return contactDetails;
     }
 
-    public void setPostaladdress_id(Long postaladdress_id) {
-        this.postaladdress_id = postaladdress_id;
-    }
-
-    public Long getContactdetails_id() {
-        return contactdetails_id;
-    }
-
-    public void setContactdetails_id(Long contactdetails_id) {
-        this.contactdetails_id = contactdetails_id;
+    public void setContactDetails(ContactDetails contactDetails) {
+        this.contactDetails = contactDetails;
     }
 }
