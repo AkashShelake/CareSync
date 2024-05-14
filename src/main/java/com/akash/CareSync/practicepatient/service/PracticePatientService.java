@@ -4,6 +4,7 @@ import com.akash.CareSync.practicepatient.entity.PracticePatient;
 import com.akash.CareSync.practicepatient.repository.PracticePatientRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +37,7 @@ public class PracticePatientService {
                     patient.setGender(practicePatient.getGender());
                     patient.setBlood_group(practicePatient.getBlood_group());
                     patient.setDate_of_birth(practicePatient.getDate_of_birth());
+                    patient.setUpdatedAt(Instant.now());
                 }
         );
         return optionalPracticePatient.orElse(null);

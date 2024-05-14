@@ -1,9 +1,11 @@
 package com.akash.CareSync.appointments.entity;
 
 import com.akash.CareSync.base.BaseEntity;
+import jakarta.persistence.Entity;
 
 import java.util.Date;
 
+@Entity
 public class Appointment extends BaseEntity {
     Long patient_id;
     Long member_id;

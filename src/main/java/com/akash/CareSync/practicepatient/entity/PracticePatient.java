@@ -1,9 +1,9 @@
 package com.akash.CareSync.practicepatient.entity;
 
 import com.akash.CareSync.base.BaseEntity;
+import jakarta.persistence.Entity;
 
-//@Table(name = "PracticePatientsList")
-//@Entity
+@Entity
 public class  PracticePatient extends BaseEntity {
     String first_name;
     String last_name;

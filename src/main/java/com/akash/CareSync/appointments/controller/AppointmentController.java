@@ -15,23 +15,23 @@ public class AppointmentController {
     }
 
     @GetMapping
-    public List<Appointment> getMembersList() {
+    public List<Appointment> getAppointmentsList() {
         return appointmentService.getAllAppointments();
     }
 
     @PostMapping
-    public Appointment addMember(@RequestBody Appointment appointment) {
+    public Appointment addAppointment(@RequestBody Appointment appointment) {
         appointment.setStatus(0);
         return appointmentService.addAppointment(appointment);
     }
 
     @PutMapping
-    public Appointment updateMember(@RequestBody Appointment appointment) {
+    public Appointment updateAppointment(@RequestBody Appointment appointment) {
         return appointmentService.updateAppointment(appointment);
     }
 
     @DeleteMapping("{id}")
-    public void deleteMember(@PathVariable Long id) {
+    public void deleteAppointment(@PathVariable Long id) {
         appointmentService.deleteAppointment(id);
     }
 }

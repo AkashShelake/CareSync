@@ -3,6 +3,8 @@ package com.akash.CareSync.practicemember.service;
 import com.akash.CareSync.practicemember.entity.PracticeMember;
 import com.akash.CareSync.practicemember.repository.PracticeMemberRepository;
 import org.springframework.stereotype.Service;
+
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,6 +43,7 @@ public class PracticeMemberService {
                     member.setGender(practiceMember.getGender());
                     member.setBlood_group(practiceMember.getBlood_group());
                     member.setDegree(practiceMember.getDegree());
+                    member.setUpdatedAt(Instant.now());
                 }
         );
         return optionalPracticeMember.orElse(null);

@@ -4,6 +4,7 @@ import com.akash.CareSync.appointments.entity.Appointment;
 import com.akash.CareSync.appointments.repository.AppointmentRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,6 +36,7 @@ public class AppointmentService {
                     appontmentDetails.setPatient_id(appointment.getPatient_id());
                     appontmentDetails.setReason(appointment.getReason());
                     appontmentDetails.setAppointment_date(appointment.getAppointment_date());
+                    appontmentDetails.setUpdatedAt(Instant.now());
                 }
         );
         return optionalPracticeMember.orElse(null);

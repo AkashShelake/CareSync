@@ -4,6 +4,7 @@ import com.akash.CareSync.contactdetails.entity.ContactDetails;
 import com.akash.CareSync.contactdetails.repository.ContactDetailsRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.Optional;
 
 @Service
@@ -27,6 +28,7 @@ public class ContactDetailsService{
                 contact -> {
                     contact.setEmail(contactDetails.getEmail());
                     contact.setPhone(contactDetails.getPhone());
+                    contact.setUpdatedAt(Instant.now());
                 }
         );
         return optionalContactDetails.orElse(null);

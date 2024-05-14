@@ -1,7 +1,9 @@
 package com.akash.CareSync.contactdetails.entity;
 
 import com.akash.CareSync.base.BaseEntity;
+import jakarta.persistence.Entity;
 
+@Entity
 public class ContactDetails extends BaseEntity {
     private String email;
     private String phone;
