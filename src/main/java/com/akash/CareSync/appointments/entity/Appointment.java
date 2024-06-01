@@ -9,7 +9,7 @@ import java.util.Date;
 public class Appointment extends BaseEntity {
     Long patient_id;
     Long member_id;
-    Date appointment_date;
+    String appointment_date;
     String reason;
     Integer status;
 
@@ -29,11 +29,11 @@ public class Appointment extends BaseEntity {
         this.member_id = member_id;
     }
 
-    public Date getAppointment_date() {
+    public String getAppointment_date() {
         return appointment_date;
     }
 
-    public void setAppointment_date(Date appointment_date) {
+    public void setAppointment_date(String appointment_date) {
         this.appointment_date = appointment_date;
     }
 

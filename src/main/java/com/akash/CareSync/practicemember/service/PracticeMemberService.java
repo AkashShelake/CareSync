@@ -2,19 +2,27 @@ package com.akash.CareSync.practicemember.service;
 
 import com.akash.CareSync.practicemember.entity.PracticeMember;
 import com.akash.CareSync.practicemember.repository.PracticeMemberRepository;
+import com.akash.CareSync.role.entity.Role;
+import com.akash.CareSync.role.repository.RoleRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class PracticeMemberService {
 
+    private final RoleRepository roleRepository;
+
     private final PracticeMemberRepository practiceMemberRepository;
 
-    public PracticeMemberService(PracticeMemberRepository practiceMemberRepository) {
+    public PracticeMemberService(PracticeMemberRepository practiceMemberRepository, RoleRepository roleRepository) {
         this.practiceMemberRepository = practiceMemberRepository;
+        this.roleRepository = roleRepository;
     }
 
     public List<PracticeMember> getAllPracticeMembers() {
@@ -31,6 +39,21 @@ public class PracticeMemberService {
     }
 
     public PracticeMember addMember(PracticeMember practiceMember) {
+        Set<Role> roles = new HashSet<>();
+        Optional<Role> role = Optional.of(roleRepository.findByName("ROLE_ADMIN").orElseThrow());
+        role.ifPresent(roles::add);
+        practiceMember.setRoles(roles);
+        return practiceMemberRepository.save(practiceMember);
+    }
+
+    @Transactional
+    public PracticeMember addMemberWithRoles(PracticeMember practiceMember, Set<Long> roleIds) {
+        Set<Role> roles = new HashSet<>();
+        for (Long roleId : roleIds) {
+            Optional<Role> role = roleRepository.findById(roleId);
+            role.ifPresent(roles::add);
+        }
+        practiceMember.setRoles(roles);
         return practiceMemberRepository.save(practiceMember);
     }
 
