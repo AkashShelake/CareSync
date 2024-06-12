@@ -23,6 +23,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String user_name) throws UsernameNotFoundException {
         PracticeMember member = this.practiceMemberRepository.findByUserName(user_name).orElseThrow(null);
-        return new User(member.getUsername(), member.getPassword(), new ArrayList<>());
+        return new User(member.getUsername(), member.getPassword(), member.getAuthorities());
     }
 }

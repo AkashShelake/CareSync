@@ -47,10 +47,10 @@ public class PracticeMemberService {
     }
 
     @Transactional
-    public PracticeMember addMemberWithRoles(PracticeMember practiceMember, Set<Long> roleIds) {
+    public PracticeMember addMemberWithRoles(PracticeMember practiceMember, Set<String> userRoles) {
         Set<Role> roles = new HashSet<>();
-        for (Long roleId : roleIds) {
-            Optional<Role> role = roleRepository.findById(roleId);
+        for (String roleName : userRoles) {
+            Optional<Role> role = roleRepository.findByName(roleName);
             role.ifPresent(roles::add);
         }
         practiceMember.setRoles(roles);
