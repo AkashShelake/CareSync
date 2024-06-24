@@ -4,6 +4,7 @@ import com.akash.CareSync.authentication.Entity.JwtAuthRequest;
 import com.akash.CareSync.authentication.Entity.JwtAuthResponse;
 import com.akash.CareSync.config.AppConstants;
 import com.akash.CareSync.practicemember.entity.PracticeMember;
+import com.akash.CareSync.practicemember.repository.PracticeMemberRepository;
 import com.akash.CareSync.practicemember.service.PracticeMemberService;
 import com.akash.CareSync.security.JwtTokenHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -52,6 +54,8 @@ public class AuthController {
         String token = this.jwtTokenHelper.generateToken(user);
         JwtAuthResponse response = new JwtAuthResponse();
         response.setToken(token);
+        PracticeMember member = this.practiceMemberService.getByUserName(user.getUsername()).orElseThrow(() -> new UsernameNotFoundException(appConstants.USER_NOT_FOUND));
+        response.setPracticeMember(member);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

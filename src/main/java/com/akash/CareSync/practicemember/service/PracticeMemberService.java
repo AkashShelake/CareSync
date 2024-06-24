@@ -38,6 +38,10 @@ public class PracticeMemberService {
         return practiceMemberRepository.findById(id);
     }
 
+    public Optional<PracticeMember> getByUserName(String username){
+        return practiceMemberRepository.findByUserName(username);
+    }
+
     public PracticeMember addMember(PracticeMember practiceMember) {
         Set<Role> roles = new HashSet<>();
         Optional<Role> role = Optional.of(roleRepository.findByName("ROLE_ADMIN").orElseThrow());
