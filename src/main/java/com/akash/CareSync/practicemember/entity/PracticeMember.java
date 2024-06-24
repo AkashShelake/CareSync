@@ -23,7 +23,7 @@ public class PracticeMember extends BaseEntity implements UserDetails{
     String blood_group;
     String degree;
     String status;
-    @Column(name = "user_name")
+    @Column(name = "user_name", unique = true)
     String userName;
     String password;
     @OneToOne(cascade = CascadeType.ALL)

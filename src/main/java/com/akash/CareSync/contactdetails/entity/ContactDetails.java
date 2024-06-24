@@ -1,10 +1,12 @@
 package com.akash.CareSync.contactdetails.entity;
 
 import com.akash.CareSync.base.BaseEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 
 @Entity
 public class ContactDetails extends BaseEntity {
+    @Column(unique = true)
     private String email;
     private String phone;
 
