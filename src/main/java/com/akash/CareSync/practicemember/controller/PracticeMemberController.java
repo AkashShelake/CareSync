@@ -37,9 +37,6 @@ public class PracticeMemberController {
     @PostMapping
     public PracticeMember addMember(@RequestBody PracticeMember member, @RequestParam Set<String> roles) {
         member.setPassword(passwordEncoder.encode(member.getPassword()));
-        if(roles.isEmpty()){
-            return practiceMemberService.addMember(member);
-        }
         return practiceMemberService.addMemberWithRoles(member, roles);
     }
 

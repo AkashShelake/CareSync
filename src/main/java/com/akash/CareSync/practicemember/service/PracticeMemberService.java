@@ -43,6 +43,7 @@ public class PracticeMemberService {
         Optional<Role> role = Optional.of(roleRepository.findByName("ROLE_ADMIN").orElseThrow());
         role.ifPresent(roles::add);
         practiceMember.setRoles(roles);
+        practiceMember.setStatus("Enabled");
         return practiceMemberRepository.save(practiceMember);
     }
 
@@ -54,6 +55,7 @@ public class PracticeMemberService {
             role.ifPresent(roles::add);
         }
         practiceMember.setRoles(roles);
+        practiceMember.setStatus("Enabled");
         return practiceMemberRepository.save(practiceMember);
     }
 
