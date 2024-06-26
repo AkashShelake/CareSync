@@ -4,6 +4,7 @@ import com.akash.CareSync.practicemember.entity.PracticeMember;
 import com.akash.CareSync.practicemember.service.PracticeMemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -41,8 +42,13 @@ public class PracticeMemberController {
     }
 
     @PutMapping
-    public PracticeMember updateMember(@RequestBody PracticeMember member) {
-        return practiceMemberService.updateMember(member);
+    public ResponseEntity<PracticeMember> updateMember(@RequestBody PracticeMember member) {
+        PracticeMember updatedMember = practiceMemberService.updateMember(member);
+        if (updatedMember != null) {
+            return ResponseEntity.ok(updatedMember);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("{id}")

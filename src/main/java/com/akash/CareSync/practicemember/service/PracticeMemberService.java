@@ -1,5 +1,7 @@
 package com.akash.CareSync.practicemember.service;
 
+import com.akash.CareSync.contactdetails.entity.ContactDetails;
+import com.akash.CareSync.contactdetails.repository.ContactDetailsRepository;
 import com.akash.CareSync.practicemember.entity.PracticeMember;
 import com.akash.CareSync.practicemember.repository.PracticeMemberRepository;
 import com.akash.CareSync.role.entity.Role;
@@ -12,6 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class PracticeMemberService {
@@ -20,9 +23,12 @@ public class PracticeMemberService {
 
     private final PracticeMemberRepository practiceMemberRepository;
 
-    public PracticeMemberService(PracticeMemberRepository practiceMemberRepository, RoleRepository roleRepository) {
+    private final ContactDetailsRepository contactDetailsRepository;
+
+    public PracticeMemberService(PracticeMemberRepository practiceMemberRepository, RoleRepository roleRepository, ContactDetailsRepository contactDetailsRepository) {
         this.practiceMemberRepository = practiceMemberRepository;
         this.roleRepository = roleRepository;
+        this.contactDetailsRepository = contactDetailsRepository;
     }
 
     public List<PracticeMember> getAllPracticeMembers() {
@@ -64,18 +70,63 @@ public class PracticeMemberService {
     }
 
     public PracticeMember updateMember(PracticeMember practiceMember) {
-        Optional<PracticeMember> optionalPracticeMember = getById(practiceMember.getId());
-        optionalPracticeMember.ifPresent(
-                member -> {
-                    member.setFirst_name(practiceMember.getFirst_name());
-                    member.setLast_name(practiceMember.getLast_name());
-                    member.setGender(practiceMember.getGender());
-                    member.setBlood_group(practiceMember.getBlood_group());
-                    member.setDegree(practiceMember.getDegree());
-                    member.setUpdatedAt(Instant.now());
+        Optional<PracticeMember> optionalPracticeMember = practiceMemberRepository.findById(practiceMember.getId());
+        if (optionalPracticeMember.isPresent()) {
+            PracticeMember existingMember = optionalPracticeMember.get();
+
+            // Update fields if provided
+            if (practiceMember.getFirst_name() != null) {
+                existingMember.setFirst_name(practiceMember.getFirst_name());
+            }
+            if (practiceMember.getLast_name() != null) {
+                existingMember.setLast_name(practiceMember.getLast_name());
+            }
+            if (practiceMember.getGender() != null) {
+                existingMember.setGender(practiceMember.getGender());
+            }
+            if (practiceMember.getBlood_group() != null) {
+                existingMember.setBlood_group(practiceMember.getBlood_group());
+            }
+            if (practiceMember.getDegree() != null) {
+                existingMember.setDegree(practiceMember.getDegree());
+            }
+            if (practiceMember.getStatus() != null) {
+                existingMember.setStatus(practiceMember.getStatus());
+            }
+
+            // Handle ContactDetails
+            ContactDetails updatedContactDetails = practiceMember.getContactDetails();
+            if (updatedContactDetails != null) {
+                String email = updatedContactDetails.getEmail();
+                if (email != null) {
+                    Optional<ContactDetails> existingContact = contactDetailsRepository.findByEmail(email);
+                    if (existingContact.isPresent()) {
+                        // Update existing ContactDetails
+                        ContactDetails existingDetails = existingContact.get();
+                        if (updatedContactDetails.getPhone() != null) {
+                            existingDetails.setPhone(updatedContactDetails.getPhone());
+                        }
+                        updatedContactDetails = existingDetails;
+                    } else {
+                        // Create new ContactDetails
+                        updatedContactDetails = contactDetailsRepository.save(updatedContactDetails);
+                    }
                 }
-        );
-        return optionalPracticeMember.orElse(null);
+                existingMember.setContactDetails(updatedContactDetails);
+            }
+
+            // Update roles
+            Set<Role> roles = practiceMember.getRoles().stream()
+                    .map(role -> roleRepository.findByName(role.getName()))
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .collect(Collectors.toSet());
+            existingMember.setRoles(roles);
+
+            existingMember.setUpdatedAt(Instant.now());
+            return practiceMemberRepository.save(existingMember);
+        }
+        return null;
     }
 
     public void deleteMember(Long id) {
