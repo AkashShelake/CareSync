@@ -92,11 +92,11 @@ public class AppSecurityConfig {
         corsConfiguration.addAllowedHeader("Authorization");
         corsConfiguration.addAllowedHeader("Content-Type");
         corsConfiguration.addAllowedHeader("Accept");
-        corsConfiguration.addAllowedHeader("GET");
-        corsConfiguration.addAllowedHeader("POST");
-        corsConfiguration.addAllowedHeader("PUT");
-        corsConfiguration.addAllowedHeader("DELETE");
-        corsConfiguration.addAllowedHeader("OPTIONS");
+        corsConfiguration.addAllowedMethod("GET");
+        corsConfiguration.addAllowedMethod("POST");
+        corsConfiguration.addAllowedMethod("PUT");
+        corsConfiguration.addAllowedMethod("DELETE");
+        corsConfiguration.addAllowedMethod("OPTIONS");
         corsConfiguration.setMaxAge(3600L);
 
         urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
