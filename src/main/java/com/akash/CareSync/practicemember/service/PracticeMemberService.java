@@ -1,5 +1,6 @@
 package com.akash.CareSync.practicemember.service;
 
+import com.akash.CareSync.config.AppConstants;
 import com.akash.CareSync.contactdetails.entity.ContactDetails;
 import com.akash.CareSync.contactdetails.repository.ContactDetailsRepository;
 import com.akash.CareSync.practicemember.entity.PracticeMember;
@@ -7,6 +8,8 @@ import com.akash.CareSync.practicemember.repository.PracticeMemberRepository;
 import com.akash.CareSync.role.entity.Role;
 import com.akash.CareSync.role.repository.RoleRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -18,6 +21,10 @@ import java.util.stream.Collectors;
 
 @Service
 public class PracticeMemberService {
+
+
+    @Autowired
+    private AppConstants appConstants;
 
     private final RoleRepository roleRepository;
 
@@ -58,13 +65,14 @@ public class PracticeMemberService {
     }
 
     @Transactional
-    public PracticeMember addMemberWithRoles(PracticeMember practiceMember, Set<String> userRoles) {
-        Set<Role> roles = new HashSet<>();
-        for (String roleName : userRoles) {
-            Optional<Role> role = roleRepository.findByName(roleName);
-            role.ifPresent(roles::add);
-        }
+    public PracticeMember addMemberWithRoles(PracticeMember practiceMember) {
+        Set<Role> roles = practiceMember.getRoles().stream()
+                .map(role -> roleRepository.findByName(role.getName()))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toSet());
         practiceMember.setRoles(roles);
+        practiceMember.setUserName(practiceMember.getUserName());
         practiceMember.setStatus("Enabled");
         return practiceMemberRepository.save(practiceMember);
     }
@@ -125,8 +133,9 @@ public class PracticeMemberService {
 
             existingMember.setUpdatedAt(Instant.now());
             return practiceMemberRepository.save(existingMember);
+        }else{
+            throw new UsernameNotFoundException(appConstants.USER_NOT_FOUND);
         }
-        return null;
     }
 
     public void deleteMember(Long id) {

@@ -36,9 +36,9 @@ public class PracticeMemberController {
     }
 
     @PostMapping
-    public PracticeMember addMember(@RequestBody PracticeMember member, @RequestParam Set<String> roles) {
+    public PracticeMember addMember(@RequestBody PracticeMember member) {
         member.setPassword(passwordEncoder.encode(member.getPassword()));
-        return practiceMemberService.addMemberWithRoles(member, roles);
+        return practiceMemberService.addMemberWithRoles(member);
     }
 
     @PutMapping
