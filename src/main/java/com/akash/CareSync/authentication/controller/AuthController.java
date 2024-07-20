@@ -4,7 +4,6 @@ import com.akash.CareSync.authentication.Entity.JwtAuthRequest;
 import com.akash.CareSync.authentication.Entity.JwtAuthResponse;
 import com.akash.CareSync.config.AppConstants;
 import com.akash.CareSync.practicemember.entity.PracticeMember;
-import com.akash.CareSync.practicemember.repository.PracticeMemberRepository;
 import com.akash.CareSync.practicemember.service.PracticeMemberService;
 import com.akash.CareSync.security.JwtTokenHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,6 +73,4 @@ public class AuthController {
             throw new BadCredentialsException(appConstants.AUTHENTICATION_ERROR);
         }
     }
-
-
 }

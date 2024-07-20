@@ -5,6 +5,7 @@ import com.akash.CareSync.appointments.repository.AppointmentRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,21 +30,35 @@ public class AppointmentService {
     }
 
     public Appointment updateAppointment(Appointment appointment) {
-        Optional<Appointment> optionalPracticeMember = getById(appointment.getId());
-        optionalPracticeMember.ifPresent(
-                appontmentDetails -> {
-                    appontmentDetails.setMember_id(appointment.getMember_id());
-                    appontmentDetails.setPatient_id(appointment.getPatient_id());
-                    appontmentDetails.setReason(appointment.getReason());
-                    appontmentDetails.setAppointment_date(appointment.getAppointment_date());
-                    appontmentDetails.setUpdatedAt(Instant.now());
-                }
-        );
-        return optionalPracticeMember.orElse(null);
+        Optional<Appointment> optionalAppointment = getById(appointment.getId());
+        optionalAppointment.ifPresent(existingAppointment -> {
+            if (appointment.getMember_id() != null) {
+                existingAppointment.setMember_id(appointment.getMember_id());
+            }
+            if (appointment.getPatient_id() != null) {
+                existingAppointment.setPatient_id(appointment.getPatient_id());
+            }
+            if (appointment.getReason() != null) {
+                existingAppointment.setReason(appointment.getReason());
+            }
+            if (appointment.getAppointment_date() != null) {
+                existingAppointment.setAppointment_date(appointment.getAppointment_date());
+            }
+            existingAppointment.setUpdatedAt(Instant.now());
+        });
+        return optionalAppointment.orElse(null);
     }
 
     public void deleteAppointment(Long id) {
         Optional<Appointment> appointment = getById(id);
         appointment.ifPresent(appointmentRepository::delete);
+    }
+
+    public List<Appointment> getAppointmentsByDay(Date date) {
+        return appointmentRepository.findAllByDate(date);
+    }
+
+    public List<Appointment> getAppointmentsByDateRange(Date fromDate, Date toDate) {
+        return appointmentRepository.findAllByDateRange(fromDate, toDate);
     }
 }

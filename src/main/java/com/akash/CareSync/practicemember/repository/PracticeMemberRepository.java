@@ -10,5 +10,4 @@ import java.util.Optional;
 public interface PracticeMemberRepository extends CrudRepository<PracticeMember, Long> {
 
     Optional<PracticeMember> findByUserName(String userName);
-
 }
