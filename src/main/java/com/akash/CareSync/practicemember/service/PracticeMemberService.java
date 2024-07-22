@@ -129,7 +129,9 @@ public class PracticeMemberService {
                     .filter(Optional::isPresent)
                     .map(Optional::get)
                     .collect(Collectors.toSet());
-            existingMember.setRoles(roles);
+            if(!roles.isEmpty()) {
+                existingMember.setRoles(roles);
+            }
 
             existingMember.setUpdatedAt(Instant.now());
             return practiceMemberRepository.save(existingMember);
