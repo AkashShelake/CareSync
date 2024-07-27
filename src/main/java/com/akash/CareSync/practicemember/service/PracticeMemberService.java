@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class PracticeMemberService {
@@ -38,8 +39,13 @@ public class PracticeMemberService {
         this.contactDetailsRepository = contactDetailsRepository;
     }
 
-    public List<PracticeMember> getAllPracticeMembers() {
-        return (List<PracticeMember>) practiceMemberRepository.findAll();
+    public List<PracticeMember> getAllPracticeMembers(String role, String status, String search) {
+        Iterable<PracticeMember> members = practiceMemberRepository.findAll();
+        return StreamSupport.stream(members.spliterator(), false)
+                .filter(member -> (role == null || member.getRoles().contains(role)) &&
+                        (status == null || status.equalsIgnoreCase(member.getStatus())) &&
+                        (search == null || member.getFirst_name().contains(search) || member.getLast_name().contains(search) || member.getContactDetails().getEmail().contains(search)))
+                .collect(Collectors.toList());
     }
 
     public Optional<PracticeMember> getById(Long id) {

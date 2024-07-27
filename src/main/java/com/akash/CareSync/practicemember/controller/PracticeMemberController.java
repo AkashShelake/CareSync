@@ -26,8 +26,10 @@ public class PracticeMemberController {
     }
 
     @GetMapping
-    public List<PracticeMember> getMembersList() {
-        return practiceMemberService.getAllPracticeMembers();
+    public List<PracticeMember> getMembersList(@RequestParam(required = false) String role,
+                                               @RequestParam(required = false) String status,
+                                               @RequestParam(required = false) String search) {
+        return practiceMemberService.getAllPracticeMembers(role, status, search);
     }
 
     @GetMapping("{id}")
