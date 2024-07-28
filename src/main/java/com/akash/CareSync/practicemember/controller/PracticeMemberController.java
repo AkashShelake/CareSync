@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/rest/v1/practice-members")
@@ -51,6 +50,15 @@ public class PracticeMemberController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @PutMapping("{id}/status")
+    public ResponseEntity<PracticeMember> setMemberStatus(@PathVariable Long id, @RequestParam String status) {
+        if (!status.equals("Enabled") && !status.equals("Disabled")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid status value");
+        }
+        PracticeMember updatedMember = practiceMemberService.setMemberStatus(id, status);
+        return ResponseEntity.ok(updatedMember);
     }
 
     @DeleteMapping("{id}")
