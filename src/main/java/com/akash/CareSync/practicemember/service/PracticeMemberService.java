@@ -7,6 +7,7 @@ import com.akash.CareSync.practicemember.entity.PracticeMember;
 import com.akash.CareSync.practicemember.repository.PracticeMemberRepository;
 import com.akash.CareSync.role.entity.Role;
 import com.akash.CareSync.role.repository.RoleRepository;
+import io.micrometer.common.util.StringUtils;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+
 
 @Service
 public class PracticeMemberService {
@@ -40,12 +41,10 @@ public class PracticeMemberService {
     }
 
     public List<PracticeMember> getAllPracticeMembers(String role, String status, String search) {
-        Iterable<PracticeMember> members = practiceMemberRepository.findAll();
-        return StreamSupport.stream(members.spliterator(), false)
-                .filter(member -> (role == null || member.getRoles().contains(role)) &&
-                        (status == null || status.equalsIgnoreCase(member.getStatus())) &&
-                        (search == null || member.getFirst_name().contains(search) || member.getLast_name().contains(search) || member.getContactDetails().getEmail().contains(search)))
-                .collect(Collectors.toList());
+        role = StringUtils.isBlank(role) ? null : role;
+        status = StringUtils.isBlank(status) ? null : status;
+        search = StringUtils.isBlank(search) ? null : search;
+        return practiceMemberRepository.findAllByRoleStatusAndSearch(role, status, search);
     }
 
     public Optional<PracticeMember> getById(Long id) {
