@@ -29,7 +29,7 @@ public class PracticeMember extends BaseEntity implements UserDetails{
     @OneToOne(cascade = CascadeType.ALL)
     ContactDetails contactDetails;
     @Lob
-    @Column(name = "photo", columnDefinition = "BLOB")
+    @Column(name = "photo", columnDefinition = "LONGBLOB")
     private byte[] photo;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
