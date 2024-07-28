@@ -65,5 +65,4 @@ public class PracticeMemberController {
     public void deleteMember(@PathVariable Long id) {
         practiceMemberService.deleteMember(id);
     }
-
 }

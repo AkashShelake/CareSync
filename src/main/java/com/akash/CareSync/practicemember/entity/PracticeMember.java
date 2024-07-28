@@ -28,6 +28,9 @@ public class PracticeMember extends BaseEntity implements UserDetails{
     String password;
     @OneToOne(cascade = CascadeType.ALL)
     ContactDetails contactDetails;
+    @Lob
+    @Column(name = "photo", columnDefinition = "BLOB")
+    private byte[] photo;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name="user_role", joinColumns = @JoinColumn(name = "user", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role", referencedColumnName = "id"))
@@ -87,6 +90,14 @@ public class PracticeMember extends BaseEntity implements UserDetails{
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public byte[] getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(byte[] photo) {
+        this.photo = photo;
     }
 
     @Override

@@ -22,18 +22,14 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-
 @Service
 public class PracticeMemberService {
-
 
     @Autowired
     private AppConstants appConstants;
 
     private final RoleRepository roleRepository;
-
     private final PracticeMemberRepository practiceMemberRepository;
-
     private final ContactDetailsRepository contactDetailsRepository;
 
     public PracticeMemberService(PracticeMemberRepository practiceMemberRepository, RoleRepository roleRepository, ContactDetailsRepository contactDetailsRepository) {
@@ -50,15 +46,10 @@ public class PracticeMemberService {
     }
 
     public Optional<PracticeMember> getById(Long id) {
-//        List<String> a = List.of("1","2","3","4","5","6","7","8","9","10");
-//        Set<String> b = a.stream().filter(s -> s.contains("2")).collect(Collectors.toSet());
-//        IntStream.range(10, 100).forEach(System.out::println);
-//        a.forEach(System.out::println);
-//        Optional.ofNullable(practiceMemberRepository.findQu())
         return practiceMemberRepository.findById(id);
     }
 
-    public Optional<PracticeMember> getByUserName(String username){
+    public Optional<PracticeMember> getByUserName(String username) {
         return practiceMemberRepository.findByUserName(username);
     }
 
@@ -136,13 +127,18 @@ public class PracticeMemberService {
                     .filter(Optional::isPresent)
                     .map(Optional::get)
                     .collect(Collectors.toSet());
-            if(!roles.isEmpty()) {
+            if (!roles.isEmpty()) {
                 existingMember.setRoles(roles);
+            }
+
+            // Update photo if provided
+            if (practiceMember.getPhoto() != null) {
+                existingMember.setPhoto(practiceMember.getPhoto());
             }
 
             existingMember.setUpdatedAt(Instant.now());
             return practiceMemberRepository.save(existingMember);
-        }else{
+        } else {
             throw new UsernameNotFoundException(appConstants.USER_NOT_FOUND);
         }
     }
