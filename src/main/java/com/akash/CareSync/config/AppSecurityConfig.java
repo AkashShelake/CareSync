@@ -52,7 +52,7 @@ public class AppSecurityConfig {
                 .cors().configurationSource(corsConfigurationSource()).and()
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/api/v1/auth/**").permitAll()
-                        .requestMatchers("/api/rest/v1/practice-members/**").hasRole("ADMIN")
+                        .requestMatchers("/api/rest/v1/practice-members/**").hasAnyRole("ADMIN", "PHYSICIAN")
                         .requestMatchers("/api/rest/v1/practice-patients/**").hasAnyRole("ADMIN", "PHYSICIAN", "PHYSICIAN_ASSISTANT", "NURSE")
                         .requestMatchers("/api/rest/v1/appointments/**").hasAnyRole("ADMIN", "PHYSICIAN", "PHYSICIAN_ASSISTANT", "NURSE")
                         .anyRequest().authenticated()
