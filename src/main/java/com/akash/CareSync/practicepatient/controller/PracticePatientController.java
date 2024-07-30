@@ -1,8 +1,11 @@
 package com.akash.CareSync.practicepatient.controller;
 
+import com.akash.CareSync.practicemember.entity.PracticeMember;
 import com.akash.CareSync.practicepatient.entity.PracticePatient;
 import com.akash.CareSync.practicepatient.service.PracticePatientService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -18,6 +21,11 @@ public class PracticePatientController {
     @GetMapping
     public List<PracticePatient> getPatientsList() {
         return practicePatientService.getAllPracticePatients();
+    }
+
+    @GetMapping("{id}")
+    public PracticePatient getPatient(@PathVariable Long id) {
+        return practicePatientService.getById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found!"));
     }
 
     @PostMapping
