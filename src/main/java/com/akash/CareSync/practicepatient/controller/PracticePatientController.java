@@ -21,12 +21,12 @@ public class PracticePatientController {
     }
 
     @PostMapping
-    public PracticePatient add(@RequestBody PracticePatient patient) {
+    public PracticePatient addPatient(@RequestBody PracticePatient patient) {
         return practicePatientService.addPatient(patient);
     }
 
     @PutMapping
-    public PracticePatient put(@RequestBody PracticePatient patient) {
+    public PracticePatient updatePatient(@RequestBody PracticePatient patient) {
         return practicePatientService.updatePatient(patient);
     }
 
