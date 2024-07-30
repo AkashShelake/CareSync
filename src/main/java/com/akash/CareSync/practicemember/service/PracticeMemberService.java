@@ -99,6 +99,9 @@ public class PracticeMemberService {
             if (practiceMember.getStatus() != null) {
                 existingMember.setStatus(practiceMember.getStatus());
             }
+            if (practiceMember.getUserName() != null) {
+                existingMember.setUserName(practiceMember.getUserName());
+            }
 
             // Handle ContactDetails
             ContactDetails updatedContactDetails = practiceMember.getContactDetails();
