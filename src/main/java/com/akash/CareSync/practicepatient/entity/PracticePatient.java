@@ -13,6 +13,7 @@ public class PracticePatient extends BaseEntity {
     String gender;
     String date_of_birth;
     String blood_group;
+    String status;
     Long postaladdress_id;
     Long contactdetails_id;
     @OneToOne(cascade = CascadeType.ALL)
@@ -58,6 +59,14 @@ public class PracticePatient extends BaseEntity {
         this.blood_group = blood_group;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public Long getPostaladdress_id() {
         return postaladdress_id;
     }
@@ -90,6 +99,7 @@ public class PracticePatient extends BaseEntity {
                 ", gender='" + gender + '\'' +
                 ", date_of_birth='" + date_of_birth + '\'' +
                 ", blood_group='" + blood_group + '\'' +
+                ", status='" + status + '\'' +
                 ", postaladdress_id=" + postaladdress_id +
                 ", contactdetails_id=" + contactdetails_id +
                 ", contactDetails=" + contactDetails +

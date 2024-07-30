@@ -30,13 +30,18 @@ public class PracticePatientController {
         return practicePatientService.updatePatient(patient);
     }
 
-    @DeleteMapping("{id}")
-    public void deletePatient(@PathVariable Long id) {
-        practicePatientService.deletePatient(id);
-    }
-
     @GetMapping("/list")
     public List<PracticePatient> searchPatients(@RequestParam(required = false) String searchString) {
         return practicePatientService.searchPatients(searchString);
+    }
+
+    @PatchMapping("/{id}/disable")
+    public PracticePatient disablePatient(@PathVariable Long id) {
+        return practicePatientService.makePatientInactive(id);
+    }
+
+    @DeleteMapping("{id}")
+    public void deletePatient(@PathVariable Long id) {
+        practicePatientService.deletePatient(id);
     }
 }

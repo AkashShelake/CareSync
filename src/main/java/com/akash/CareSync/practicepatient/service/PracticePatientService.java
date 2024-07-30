@@ -26,6 +26,7 @@ public class PracticePatientService {
     }
 
     public PracticePatient addPatient(PracticePatient practicePatient) {
+        practicePatient.setStatus("Enabled");
         return practicePatientRepository.save(practicePatient);
     }
 
@@ -59,13 +60,26 @@ public class PracticePatientService {
         return null;
     }
 
-    public void deletePatient(Long id) {
-        Optional<PracticePatient> practicePatient = getById(id);
-        practicePatient.ifPresent(practicePatientRepository::delete);
-    }
-
     public List<PracticePatient> searchPatients(String searchString) {
         searchString = searchString.isBlank() ? null : searchString;
         return practicePatientRepository.searchByFirstNameLastNameOrEmail(searchString);
+    }
+
+    public PracticePatient makePatientInactive(Long id) {
+        Optional<PracticePatient> optionalPracticePatient = practicePatientRepository.findById(id);
+        if (optionalPracticePatient.isPresent()) {
+            PracticePatient patient = optionalPracticePatient.get();
+            if ("Enabled".equals(patient.getStatus())) {
+                patient.setStatus("Disabled");
+                patient.setUpdatedAt(Instant.now());
+                return practicePatientRepository.save(patient);
+            }
+        }
+        return null;
+    }
+
+    public void deletePatient(Long id) {
+        Optional<PracticePatient> practicePatient = getById(id);
+        practicePatient.ifPresent(practicePatientRepository::delete);
     }
 }
