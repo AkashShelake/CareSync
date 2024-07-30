@@ -1,10 +1,13 @@
 package com.akash.CareSync.practicepatient.entity;
 
 import com.akash.CareSync.base.BaseEntity;
+import com.akash.CareSync.contactdetails.entity.ContactDetails;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToOne;
 
 @Entity
-public class  PracticePatient extends BaseEntity {
+public class PracticePatient extends BaseEntity {
     String first_name;
     String last_name;
     String gender;
@@ -12,6 +15,8 @@ public class  PracticePatient extends BaseEntity {
     String blood_group;
     Long postaladdress_id;
     Long contactdetails_id;
+    @OneToOne(cascade = CascadeType.ALL)
+    ContactDetails contactDetails;
 
     public String getFirst_name() {
         return first_name;
@@ -69,16 +74,25 @@ public class  PracticePatient extends BaseEntity {
         this.contactdetails_id = contactdetails_id;
     }
 
+    public ContactDetails getContactDetails() {
+        return contactDetails;
+    }
+
+    public void setContactDetails(ContactDetails contactDetails) {
+        this.contactDetails = contactDetails;
+    }
+
     @Override
     public String toString() {
         return "PracticePatient{" +
-                ", first_name='" + first_name + '\'' +
+                "first_name='" + first_name + '\'' +
                 ", last_name='" + last_name + '\'' +
                 ", gender='" + gender + '\'' +
                 ", date_of_birth='" + date_of_birth + '\'' +
                 ", blood_group='" + blood_group + '\'' +
                 ", postaladdress_id=" + postaladdress_id +
                 ", contactdetails_id=" + contactdetails_id +
+                ", contactDetails=" + contactDetails +
                 '}';
     }
 }

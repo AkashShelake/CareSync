@@ -14,6 +14,7 @@ public class PracticePatientController {
     PracticePatientController(PracticePatientService practicePatientService) {
         this.practicePatientService = practicePatientService;
     }
+
     @GetMapping
     public List<PracticePatient> getPatientsList() {
         return practicePatientService.getAllPracticePatients();
@@ -34,4 +35,8 @@ public class PracticePatientController {
         practicePatientService.deletePatient(id);
     }
 
+    @GetMapping("/list")
+    public List<PracticePatient> searchPatients(@RequestParam(required = false) String searchString) {
+        return practicePatientService.searchPatients(searchString);
+    }
 }

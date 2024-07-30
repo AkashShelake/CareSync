@@ -1,10 +1,22 @@
 package com.akash.CareSync.practicepatient.repository;
 
 import com.akash.CareSync.practicepatient.entity.PracticePatient;
-import org.springframework.data.repository.CrudRepository;
+import com.akash.CareSync.contactdetails.entity.ContactDetails;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface PracticePatientRepository extends CrudRepository<PracticePatient, Long> {
+import java.util.List;
 
+@Repository
+public interface PracticePatientRepository extends JpaRepository<PracticePatient, Long> {
+
+    @Query("SELECT p FROM PracticePatient p " +
+            "LEFT JOIN p.contactDetails c " +
+            "WHERE (:searchString IS NULL OR :searchString = '' " +
+            "OR LOWER(p.first_name) LIKE LOWER(CONCAT('%', :searchString, '%')) " +
+            "OR LOWER(p.last_name) LIKE LOWER(CONCAT('%', :searchString, '%')) " +
+            "OR LOWER(c.email) LIKE LOWER(CONCAT('%', :searchString, '%')))")
+    List<PracticePatient> searchByFirstNameLastNameOrEmail(@Param("searchString") String searchString);
 }
