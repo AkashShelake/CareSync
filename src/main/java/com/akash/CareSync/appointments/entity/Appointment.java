@@ -10,6 +10,7 @@ public class Appointment extends BaseEntity {
     Long patient_id;
     Long member_id;
     Date appointment_date;
+    Integer duration;
     String reason;
     Integer status;
 
@@ -37,6 +38,14 @@ public class Appointment extends BaseEntity {
         this.appointment_date = appointment_date;
     }
 
+    public Integer getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Integer duration) {
+        this.duration = duration;
+    }
+
     public String getReason() {
         return reason;
     }
@@ -59,8 +68,9 @@ public class Appointment extends BaseEntity {
                 "patient_id=" + patient_id +
                 ", member_id=" + member_id +
                 ", appointment_date=" + appointment_date +
+                ", duration=" + duration +
                 ", reason='" + reason + '\'' +
-                ", status='" + status + '\'' +
+                ", status=" + status +
                 '}';
     }
 }

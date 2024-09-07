@@ -1,6 +1,7 @@
 package com.akash.CareSync.appointments.service;
 
 import com.akash.CareSync.appointments.entity.Appointment;
+import com.akash.CareSync.appointments.entity.AppointmentStatus;
 import com.akash.CareSync.appointments.repository.AppointmentRepository;
 import org.springframework.stereotype.Service;
 
@@ -26,12 +27,15 @@ public class AppointmentService {
     }
 
     public Appointment addAppointment(Appointment appointment) {
+        appointment.setStatus(AppointmentStatus.REQUESTED.getStatusCode());
         return appointmentRepository.save(appointment);
     }
 
     public Appointment updateAppointment(Appointment appointment) {
         Optional<Appointment> optionalAppointment = getById(appointment.getId());
-        optionalAppointment.ifPresent(existingAppointment -> {
+        if (optionalAppointment.isPresent()) {
+            Appointment existingAppointment = optionalAppointment.get();
+
             if (appointment.getMember_id() != null) {
                 existingAppointment.setMember_id(appointment.getMember_id());
             }
@@ -45,13 +49,33 @@ public class AppointmentService {
                 existingAppointment.setAppointment_date(appointment.getAppointment_date());
             }
             existingAppointment.setUpdatedAt(Instant.now());
-        });
-        return optionalAppointment.orElse(null);
+
+            return appointmentRepository.save(existingAppointment);
+        }
+        throw new RuntimeException("Appointment not found for id: " + appointment.getId());
     }
 
-    public void deleteAppointment(Long id) {
-        Optional<Appointment> appointment = getById(id);
-        appointment.ifPresent(appointmentRepository::delete);
+
+    public void deleteAppointment(Long appointmentId) {
+        Optional<Appointment> optionalAppointment = getById(appointmentId);
+        if(optionalAppointment.isPresent()) {
+            Appointment appointment = optionalAppointment.get();
+            appointment.setStatus(AppointmentStatus.DELETED.getStatusCode());
+            appointment.setUpdatedAt(Instant.now());
+            appointmentRepository.save(appointment);
+        }
+        throw new RuntimeException("Appointment not found for id: " + appointmentId);
+    }
+
+    public Appointment cancelAppointment(Long appointmentId) {
+        Optional<Appointment> optionalAppointment = getById(appointmentId);
+        if(optionalAppointment.isPresent()) {
+            Appointment appointment = optionalAppointment.get();
+            appointment.setStatus(AppointmentStatus.CANCELLED.getStatusCode());
+            appointment.setUpdatedAt(Instant.now());
+            return appointmentRepository.save(appointment);
+        }
+        throw new RuntimeException("Appointment not found for id: " + appointmentId);
     }
 
     public List<Appointment> getAppointmentsByDay(Date date) {
@@ -60,5 +84,23 @@ public class AppointmentService {
 
     public List<Appointment> getAppointmentsByDateRange(Date fromDate, Date toDate) {
         return appointmentRepository.findAllByDateRange(fromDate, toDate);
+    }
+
+    public List<Appointment> getAppointmentsByDateRangeAndStatus(Date fromDate, Date toDate, Integer status) {
+        return appointmentRepository.findAllByDateRangeAndStatus(fromDate, toDate, status);
+    }
+
+    public List<Appointment> getWaitingList(){
+        return appointmentRepository.findByStatus(AppointmentStatus.WAITING.getStatusCode());
+    }
+    public Appointment addToWaitList(Long appointmentId){
+        Optional<Appointment> optionalAppointment = getById(appointmentId);
+        if(optionalAppointment.isPresent()) {
+            Appointment appointment = optionalAppointment.get();
+            appointment.setStatus(AppointmentStatus.WAITING.getStatusCode());
+            appointment.setUpdatedAt(Instant.now());
+            return appointmentRepository.save(appointment);
+        }
+        throw new RuntimeException("Appointment not found for id: " + appointmentId);
     }
 }

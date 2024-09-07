@@ -26,13 +26,12 @@ public class AppointmentController {
     }
 
     @GetMapping("{id}")
-    public Appointment getMember(@PathVariable Long id) {
+    public Appointment getAppointment(@PathVariable Long id) {
         return appointmentService.getById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid Appointment Id"));
     }
 
     @PostMapping
     public Appointment addAppointment(@RequestBody Appointment appointment) {
-        appointment.setStatus(0);
         return appointmentService.addAppointment(appointment);
     }
 
@@ -44,6 +43,11 @@ public class AppointmentController {
     @DeleteMapping("{id}")
     public void deleteAppointment(@PathVariable Long id) {
         appointmentService.deleteAppointment(id);
+    }
+
+    @PostMapping("/cancel/{id}")
+    public void cancelAppointment(@PathVariable Long id) {
+        appointmentService.cancelAppointment(id);
     }
 
     @GetMapping("/day")
@@ -58,5 +62,25 @@ public class AppointmentController {
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date toDate) {
         List<Appointment> appointments = appointmentService.getAppointmentsByDateRange(fromDate, toDate);
         return ResponseEntity.ok(appointments);
+    }
+
+    @GetMapping("/range/status")
+    public ResponseEntity<List<Appointment>> getAppointmentsByDateRangeAndStatus(
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date fromDate,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date toDate, Integer status) {
+        List<Appointment> appointments = appointmentService.getAppointmentsByDateRangeAndStatus(fromDate, toDate, status);
+        return ResponseEntity.ok(appointments);
+    }
+
+    @GetMapping("/waiting/list")
+    public ResponseEntity<List<Appointment>> getWaitingList(){
+        List<Appointment> waitingList = appointmentService.getWaitingList();
+        return ResponseEntity.ok(waitingList);
+    }
+
+    @PostMapping("/waiting/add")
+    public ResponseEntity<Appointment> getWaitingList(@RequestParam Long appointmentId){
+        Appointment appointment = appointmentService.addToWaitList(appointmentId);
+        return ResponseEntity.ok(appointment);
     }
 }

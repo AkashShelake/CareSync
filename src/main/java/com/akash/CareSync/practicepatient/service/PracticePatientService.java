@@ -1,5 +1,7 @@
 package com.akash.CareSync.practicepatient.service;
 
+import com.akash.CareSync.contactdetails.entity.ContactDetails;
+import com.akash.CareSync.contactdetails.repository.ContactDetailsRepository;
 import com.akash.CareSync.practicepatient.entity.PracticePatient;
 import com.akash.CareSync.practicepatient.repository.PracticePatientRepository;
 import org.springframework.stereotype.Service;
@@ -12,9 +14,11 @@ import java.util.Optional;
 public class PracticePatientService {
 
     private final PracticePatientRepository practicePatientRepository;
+    private final ContactDetailsRepository contactDetailsRepository;
 
-    public PracticePatientService(PracticePatientRepository practicePatientRepository) {
+    public PracticePatientService(PracticePatientRepository practicePatientRepository, ContactDetailsRepository contactDetailsRepository) {
         this.practicePatientRepository = practicePatientRepository;
+        this.contactDetailsRepository = contactDetailsRepository;
     }
 
     public List<PracticePatient> getAllPracticePatients() {
@@ -50,6 +54,27 @@ public class PracticePatientService {
             }
             if (practicePatient.getDate_of_birth() != null && !practicePatient.getDate_of_birth().isEmpty()) {
                 patient.setDate_of_birth(practicePatient.getDate_of_birth());
+            }
+
+            // Handle ContactDetails
+            ContactDetails updatedContactDetails = practicePatient.getContactDetails();
+            if (updatedContactDetails != null) {
+                String email = updatedContactDetails.getEmail();
+                if (email != null) {
+                    Optional<ContactDetails> existingContact = contactDetailsRepository.findByEmail(email);
+                    if (existingContact.isPresent()) {
+                        // Update existing ContactDetails
+                        ContactDetails existingDetails = existingContact.get();
+                        if (updatedContactDetails.getPhone() != null) {
+                            existingDetails.setPhone(updatedContactDetails.getPhone());
+                        }
+                        updatedContactDetails = existingDetails;
+                    } else {
+                        // Create new ContactDetails
+                        updatedContactDetails = contactDetailsRepository.save(updatedContactDetails);
+                    }
+                }
+                patient.setContactDetails(updatedContactDetails);
             }
 
             // Update timestamp
