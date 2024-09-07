@@ -90,6 +90,10 @@ public class AppointmentService {
         return appointmentRepository.findAllByDateRangeAndStatus(fromDate, toDate, status);
     }
 
+    public List<Appointment> getFilteredAppointments(List<Integer> statuses, Long memberId, Date fromDate, Date toDate) {
+        return appointmentRepository.findByFilters(statuses, memberId, fromDate, toDate);
+    }
+
     public List<Appointment> getWaitingList(){
         return appointmentRepository.findByStatus(AppointmentStatus.WAITING.getStatusCode());
     }

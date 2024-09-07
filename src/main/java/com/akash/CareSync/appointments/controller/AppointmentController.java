@@ -72,6 +72,17 @@ public class AppointmentController {
         return ResponseEntity.ok(appointments);
     }
 
+    @GetMapping("/filter")
+    public ResponseEntity<List<Appointment>> getAppointmentsByFilters(
+            @RequestParam(required = false) List<Integer> statuses,
+            @RequestParam(required = false) Long memberId,
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date fromDate,
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date toDate) {
+
+        List<Appointment> appointments = appointmentService.getFilteredAppointments(statuses, memberId, fromDate, toDate);
+        return ResponseEntity.ok(appointments);
+    }
+
     @GetMapping("/waiting/list")
     public ResponseEntity<List<Appointment>> getWaitingList(){
         List<Appointment> waitingList = appointmentService.getWaitingList();
