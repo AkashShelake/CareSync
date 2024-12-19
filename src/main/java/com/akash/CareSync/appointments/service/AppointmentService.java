@@ -36,11 +36,11 @@ public class AppointmentService {
         if (optionalAppointment.isPresent()) {
             Appointment existingAppointment = optionalAppointment.get();
 
-            if (appointment.getMember_id() != null) {
-                existingAppointment.setMember_id(appointment.getMember_id());
+            if (appointment.getMember() != null) {
+                existingAppointment.setMember(appointment.getMember());
             }
-            if (appointment.getPatient_id() != null) {
-                existingAppointment.setPatient_id(appointment.getPatient_id());
+            if (appointment.getPatient() != null) {
+                existingAppointment.setPatient(appointment.getPatient());
             }
             if (appointment.getReason() != null) {
                 existingAppointment.setReason(appointment.getReason());
@@ -55,21 +55,21 @@ public class AppointmentService {
         throw new RuntimeException("Appointment not found for id: " + appointment.getId());
     }
 
-
     public void deleteAppointment(Long appointmentId) {
         Optional<Appointment> optionalAppointment = getById(appointmentId);
-        if(optionalAppointment.isPresent()) {
+        if (optionalAppointment.isPresent()) {
             Appointment appointment = optionalAppointment.get();
             appointment.setStatus(AppointmentStatus.DELETED.getStatusCode());
             appointment.setUpdatedAt(Instant.now());
             appointmentRepository.save(appointment);
+        } else {
+            throw new RuntimeException("Appointment not found for id: " + appointmentId);
         }
-        throw new RuntimeException("Appointment not found for id: " + appointmentId);
     }
 
     public Appointment cancelAppointment(Long appointmentId) {
         Optional<Appointment> optionalAppointment = getById(appointmentId);
-        if(optionalAppointment.isPresent()) {
+        if (optionalAppointment.isPresent()) {
             Appointment appointment = optionalAppointment.get();
             appointment.setStatus(AppointmentStatus.CANCELLED.getStatusCode());
             appointment.setUpdatedAt(Instant.now());
@@ -90,16 +90,17 @@ public class AppointmentService {
         return appointmentRepository.findAllByDateRangeAndStatus(fromDate, toDate, status);
     }
 
-    public List<Appointment> getFilteredAppointments(List<Integer> statuses, Long memberId, Date fromDate, Date toDate) {
-        return appointmentRepository.findByFilters(statuses, memberId, fromDate, toDate);
+    public List<Appointment> getFilteredAppointments(List<Integer> statuses, Long memberId, Long patientId, Date fromDate, Date toDate) {
+        return appointmentRepository.findByFilters(statuses, memberId, patientId, fromDate, toDate);
     }
 
-    public List<Appointment> getWaitingList(){
+    public List<Appointment> getWaitingList() {
         return appointmentRepository.findByStatus(AppointmentStatus.WAITING.getStatusCode());
     }
-    public Appointment addToWaitList(Long appointmentId){
+
+    public Appointment addToWaitList(Long appointmentId) {
         Optional<Appointment> optionalAppointment = getById(appointmentId);
-        if(optionalAppointment.isPresent()) {
+        if (optionalAppointment.isPresent()) {
             Appointment appointment = optionalAppointment.get();
             appointment.setStatus(AppointmentStatus.WAITING.getStatusCode());
             appointment.setUpdatedAt(Instant.now());

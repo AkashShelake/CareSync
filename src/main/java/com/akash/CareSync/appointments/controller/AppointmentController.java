@@ -46,8 +46,9 @@ public class AppointmentController {
     }
 
     @PostMapping("/cancel/{id}")
-    public void cancelAppointment(@PathVariable Long id) {
+    public ResponseEntity<Void> cancelAppointment(@PathVariable Long id) {
         appointmentService.cancelAppointment(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/day")
@@ -61,13 +62,14 @@ public class AppointmentController {
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date fromDate,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date toDate) {
         List<Appointment> appointments = appointmentService.getAppointmentsByDateRange(fromDate, toDate);
-        return ResponseEntity.ok(appointments);
+        return ResponseEntity.ok(appointments); 
     }
 
     @GetMapping("/range/status")
     public ResponseEntity<List<Appointment>> getAppointmentsByDateRangeAndStatus(
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date fromDate,
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date toDate, Integer status) {
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date toDate,
+            @RequestParam Integer status) {
         List<Appointment> appointments = appointmentService.getAppointmentsByDateRangeAndStatus(fromDate, toDate, status);
         return ResponseEntity.ok(appointments);
     }
@@ -76,21 +78,22 @@ public class AppointmentController {
     public ResponseEntity<List<Appointment>> getAppointmentsByFilters(
             @RequestParam(required = false) List<Integer> statuses,
             @RequestParam(required = false) Long memberId,
+            @RequestParam(required = false) Long patientId,
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date fromDate,
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date toDate) {
 
-        List<Appointment> appointments = appointmentService.getFilteredAppointments(statuses, memberId, fromDate, toDate);
+        List<Appointment> appointments = appointmentService.getFilteredAppointments(statuses, memberId, patientId, fromDate, toDate);
         return ResponseEntity.ok(appointments);
     }
 
     @GetMapping("/waiting/list")
-    public ResponseEntity<List<Appointment>> getWaitingList(){
+    public ResponseEntity<List<Appointment>> getWaitingList() {
         List<Appointment> waitingList = appointmentService.getWaitingList();
         return ResponseEntity.ok(waitingList);
     }
 
     @PostMapping("/waiting/add")
-    public ResponseEntity<Appointment> getWaitingList(@RequestParam Long appointmentId){
+    public ResponseEntity<Appointment> addToWaitingList(@RequestParam Long appointmentId) {
         Appointment appointment = appointmentService.addToWaitList(appointmentId);
         return ResponseEntity.ok(appointment);
     }

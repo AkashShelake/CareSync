@@ -1,76 +1,35 @@
 package com.akash.CareSync.appointments.entity;
 
 import com.akash.CareSync.base.BaseEntity;
-import jakarta.persistence.Entity;
+import com.akash.CareSync.practicemember.entity.PracticeMember;
+import com.akash.CareSync.practicepatient.entity.PracticePatient;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.util.Date;
 
+@ToString
+@Getter
+@Setter
 @Entity
 public class Appointment extends BaseEntity {
-    Long patient_id;
-    Long member_id;
-    Date appointment_date;
-    Integer duration;
-    String reason;
-    Integer status;
+    @OneToOne
+    @JoinColumn(name = "patient_id")
+    private PracticePatient patient;
 
-    public Long getPatient_id() {
-        return patient_id;
-    }
+    @OneToOne
+    @JoinColumn(name = "member_id")
+    private PracticeMember member;
 
-    public void setPatient_id(Long patient_id) {
-        this.patient_id = patient_id;
-    }
+    @Column(nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date appointment_date;
 
-    public Long getMember_id() {
-        return member_id;
-    }
+    private Integer duration;
+    private String reason;
+    private Integer status;
+    private Long encounter_id;
 
-    public void setMember_id(Long member_id) {
-        this.member_id = member_id;
-    }
-
-    public Date getAppointment_date() {
-        return appointment_date;
-    }
-
-    public void setAppointment_date(Date appointment_date) {
-        this.appointment_date = appointment_date;
-    }
-
-    public Integer getDuration() {
-        return duration;
-    }
-
-    public void setDuration(Integer duration) {
-        this.duration = duration;
-    }
-
-    public String getReason() {
-        return reason;
-    }
-
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    @Override
-    public String toString() {
-        return "Appointment{" +
-                "patient_id=" + patient_id +
-                ", member_id=" + member_id +
-                ", appointment_date=" + appointment_date +
-                ", duration=" + duration +
-                ", reason='" + reason + '\'' +
-                ", status=" + status +
-                '}';
-    }
 }

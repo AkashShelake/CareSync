@@ -4,6 +4,7 @@ import com.akash.CareSync.contactdetails.entity.ContactDetails;
 import com.akash.CareSync.contactdetails.repository.ContactDetailsRepository;
 import com.akash.CareSync.practicepatient.entity.PracticePatient;
 import com.akash.CareSync.practicepatient.repository.PracticePatientRepository;
+import io.micrometer.common.util.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -86,7 +87,7 @@ public class PracticePatientService {
     }
 
     public List<PracticePatient> searchPatients(String searchString) {
-        searchString = searchString.isBlank() ? null : searchString;
+        searchString = StringUtils.isEmpty(searchString) ? null : searchString;
         return practicePatientRepository.searchByFirstNameLastNameOrEmail(searchString);
     }
 
