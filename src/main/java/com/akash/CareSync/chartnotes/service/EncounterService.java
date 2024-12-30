@@ -3,6 +3,7 @@ package com.akash.CareSync.chartnotes.service;
 import com.akash.CareSync.chartnotes.entity.Encounter;
 import com.akash.CareSync.chartnotes.repository.EncounterRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +41,9 @@ public class EncounterService {
             existingEncounter.setSymptoms(updatedEncounter.getSymptoms());
             existingEncounter.setPrescriptions(updatedEncounter.getPrescriptions());
             existingEncounter.setTreatment_notes(updatedEncounter.getTreatment_notes());
+            if(!StringUtils.isEmpty(updatedEncounter.getStatus())){
+                existingEncounter.setStatus(updatedEncounter.getStatus());
+            }
             return encounterRepository.save(existingEncounter);
         });
     }
@@ -52,7 +56,7 @@ public class EncounterService {
     // 5. List all Encounters with filters
     public List<Encounter> getEncountersWithFilters(Long provider_id, Long patient_id, String status) {
         if (provider_id == null && patient_id == null && status == null) {
-            return encounterRepository.findAll();
+            return encounterRepository.findByStatus("pending, completed");
         }
         return encounterRepository.findByProviderIdAndPatientIdAndStatus(provider_id, patient_id, status);
     }

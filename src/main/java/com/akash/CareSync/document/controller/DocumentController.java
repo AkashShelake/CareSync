@@ -35,7 +35,7 @@ public class DocumentController {
 
     @GetMapping("/download/{id}")
     public ResponseEntity<byte[]> downloadFile(@PathVariable Long id) {
-        return documentService.downloadFile(id)
+            return documentService.downloadFile(id)
                 .map(doc -> ResponseEntity.ok()
                         .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + doc.getFileName() + "\"")
                         .body(doc.getFileData()))
